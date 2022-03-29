@@ -1,0 +1,3 @@
+rootProject.name = "weather-sdk-demo"
+include ':app'
+include ':mylibrary'
