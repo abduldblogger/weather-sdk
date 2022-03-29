@@ -9,11 +9,18 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 
-//  default constructor private to avoid initialization
+/** entry point for sdk only methods of this classes are accessible outside the library or package*/
 class WeatherSDK private constructor(private val apiKey: String) {
     private var listener: WeatherDataListener? = null
     private var appDateSource: AppsDataSource = AppsDataSource()
 
+    /** returns the current weather based on the location passed into the latitude and longitude
+     * @param latitude latitude of the location for which the weather report is to be fetched
+     * @param longitude longitude of the location for which the weather report is to be fetched
+     * @param tempUnit temperature unit in which the temp to be returned like in fahrenheit or celsius
+     * @param listener listener or callback when the response is received from the server
+     *
+     * */
     fun getCurrentWeather(
         latitude: Double,
         longitude: Double,
@@ -62,14 +69,17 @@ class WeatherSDK private constructor(private val apiKey: String) {
         }
     }
 
+    /** callback for weather data response error*/
     interface ErrorListener {
         fun onErrorFetchingData(error: Throwable)
     }
 
+    /** callback for weather data response*/
     interface WeatherDataListener : ErrorListener {
         fun onWeatherResponse(response: WeatherResponse)
     }
 
+    /**temp units to be used when getting weather data*/
     enum class TempUnit {
         CELSIUS,
         FAHRENHEIT
