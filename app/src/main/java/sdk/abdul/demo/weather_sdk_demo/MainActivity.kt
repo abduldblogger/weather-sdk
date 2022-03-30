@@ -30,12 +30,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun init() {
-        weatherSDK = WeatherSDK.getInstance(getString(R.string.key))
+
     }
 
     private fun getCurrentWeather() {
+        val weatherSDK = WeatherSDK.getInstance(getString(R.string.key))
         weatherSDK.getCurrentWeather(26.8719, 80.8949,
-            WeatherSDK.TempUnit.CELSIUS,
+            WeatherSDK.TempUnit.FAHRENHEIT,
             object : WeatherSDK.WeatherDataListener {
                 override fun onWeatherResponse(response: WeatherResponse) {
                     Log.d(TAG, response.toString())

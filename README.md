@@ -1,103 +1,54 @@
-# Feedify SDK (0.0.1)
+# Weather SDK (1.0)
 
-Feedify SDK is Android API framework built top on [Feedify API](https://feedify.net). Implement your
-feedify notifications in your mobile apps rapidly.
+Weather SDK uses APIs provided by [openweathermap](https://openweathermap.org/) which provides
+weather related data like rain, snow extreme etc.
 
 ## Installation
 
-Installation is very straightforward, you need to add app in your firebase console. You can follow
-this guide [Firebase Setup](https://firebase.google.com/docs/android/setup). Skip apply
-google-services plugin, this should be handled by Feedify SDK itself. Just download
-google-services.json.
+Installation is very straightforward, you need to add download the library
+from [github](https://github.com/abduldblogger/weather-sdk/tree/master/mylibrary) and paste in the
+same app folder in which you want to integrate it, then follow the steps below:
 
-Now copy this google-services.json into your root of app assets directory this is important step.
-Note this location is different than mentioned in official document, since it's handled by SDK not
-by plugin.
+Step 1: Follow to File > New Module
+![](https://www.geeksforgeeks.org/how-to-add-a-library-project-to-android-studio/)
 
-On your project level gradle make sure to add classpath
+Click on “Import Existing Project“.
+![](https://media.geeksforgeeks.org/wp-content/uploads/20210327124538/Zm7QO.png)
 
-    classpath 'com.google.gms:google-services:4.2.0'    
-    
-Ignore this line in your app level gradle. (do not add this line)
+Step 2: Select the desired library and the desired module. Then click finish. Android Studio will
+import the library into your project and will sync Gradle files.
 
-    apply plugin: 'com.google.gms.google-services'
+Step 3: In the next step you need to add the imported module to your project’s dependencies.
+Right-click on the app folder > Open Module settings
 
-## Dependencies
+![](https://media.geeksforgeeks.org/wp-content/uploads/20210326232940/Screenshot414.png)
 
-Add following dependencies in your app gradle.
+Step 4: Navigate to the dependencies tab > Click on the ‘+’ button -> click on Module Dependency.
+The library module will be then added to the project’s dependencies.
 
-    implementation 'com.github.feedify:feed-notify:0.0.1'
-    
-    //support dependencies (required by SDK)
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation "androidx.preference:preference:1.0.0"
-    implementation 'com.google.firebase:firebase-messaging:20.0.0'
-    implementation 'com.android.volley:volley:1.1.1'
+![](https://media.geeksforgeeks.org/wp-content/uploads/20210326233244/Screenshot420.png)
 
-## Credentials settings
+it's done, your library is ready to be used!
 
-Login to your feedify console and set your firebase cloud-messaging API Key and project-id under:
+## Usage
 
-Setting > Setting > Push Sending Settings
+        val weatherSDK = WeatherSDK.getInstance(getString(R.string.key)) // use your key generated from https://openweathermap.org/
 
-Finally add feedify credentials to your app under strings.xml as follow:
+then to fetch current location's weather forecast details
 
-    <string name="feedify_user">YOR_USER</string>
-    <string name="feedify_dkey">YOUR_DKEY</string>
-    <string name="feedify_domain">YOUR_DOMAIN</string>
+        weatherSDK.getCurrentWeather(26.8719, 80.8949,
+            WeatherSDK.TempUnit.CELSIUS,
+            object : WeatherSDK.WeatherDataListener {
+                override fun onWeatherResponse(response: WeatherResponse) {
+                    Log.d(TAG, response.toString())
+                }
 
-these strings will automatically detect and used by Feedify SDK. In case not mentioned you'll get
-exception. Make sure to change your credentials in string value.
+                override fun onErrorFetchingData(error: Throwable) {
+                    Log.d(TAG, error.message.toString())
+                }
+            })
 
-That's all done!. You can test push notification from your feedify console.
+use WeatherSDK.TempUnit.CELSIUS to get temperature in celsius or WeatherSDK.TempUnit.FAHRENHEIT to
+get temperature in Fahrenheit
 
-## Advanced user
-
-You can extend application class as follow and change notification icon and on click event. In case
-event not defined it will open notification url in browser. Don't forgot to specify application
-class in your app AndroidManifest.xml.
-
-      public class MyApplication extends FeedSDK {
-          @Override
-          public void onCreate() {
-              super.onCreate();
-              //set notification small icon (optional)
-              setNotificationIcon(R.drawable.ic_stat_notifications);
-              //this activity will be open when clicked on notification (optional)
-              setStartActivity(MyActivity.class);
-          }
-      }
-
-In case you need to handle other firebase notification you can extend 'FirebaseMessagingService' as
-follow:
-
-      public class CustomMessageHandler extends FeedMessagingService {
-      
-          //Note all 'FirebaseMessagingService' feature is available since 'FeedMessagingService' extended by 'FeedMessagingService'        
-          
-          @Override
-          public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
-              super.onMessageReceived(remoteMessage);
-          }
-      }
-
-In your app AndroidManifest.xml:
-
-      <service android:name=".CustomMessageHandler">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-      </service>
-
-Additionally you can turn off/on notification as follow:
-
-      // turn off notification
-      FeedSDK.setEnabled(false);
-      
-      //check status 
-      boolean isEnabled = FeedSDK.isEnabled();
-
-## Read more about Feedify
-
-[Feedify](https://feedify.net)
       
