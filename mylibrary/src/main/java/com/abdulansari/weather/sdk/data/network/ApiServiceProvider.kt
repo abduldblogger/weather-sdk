@@ -11,7 +11,7 @@ class ApiServiceProvider {
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .build()
 
-    fun provideApticaApiservice(): ApiService {
+    fun provideApiservice(): ApiService {
         return retrofit.create(ApiService::class.java)
     }
 

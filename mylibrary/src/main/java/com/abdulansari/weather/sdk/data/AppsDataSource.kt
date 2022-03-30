@@ -7,7 +7,7 @@ import io.reactivex.Single
 
 internal class AppsDataSource : DataSource {
     private val apiService: ApiService =
-        ApiServiceProvider().provideApticaApiservice()
+        ApiServiceProvider().provideApiservice()
 
     override fun getCurrentWeather(
         latitude: Double,
